@@ -2,8 +2,8 @@ import { Box } from '@mui/system'
 import React from 'react'
 import { DrawerHeader } from './style/Style'
 import Dashboard from '../Dashboard'
-import Timeline from '../Timeline'
-import Laboratory from '../Laboratory'
+import Timeline from '../timeline/Timeline'
+import Laboratory from '../laboratory/Laboratory'
 import Article from '../Article'
 
 const Pages = ({activePage}) => {

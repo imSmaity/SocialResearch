@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {Modal, Box, Typography, TextField, Button} from '@mui/material'
 import SignUp from './SignUp'
 import axios from 'axios';
+import { UserContext } from '../App';
 
 const style = {
     position: 'absolute',
@@ -16,7 +17,9 @@ const style = {
 
 export const Login = ({isLogin,setIsLogin}) => {
   const [isSignUp,setIsSignUp]=React.useState(false)
-  const [data,setData]=React.useState({email:'',password:''})
+  const [data,setData]=React.useState({email:'s@gmail.com',password:'aaaaaa'})
+  const USER_STATE=useContext(UserContext)
+  const {dispatch}=USER_STATE
 
     const handleData=(e)=>{
       setData({...data,[e.target.name]:e.target.value})
@@ -30,11 +33,14 @@ export const Login = ({isLogin,setIsLogin}) => {
     }
 
     const Login=()=>{
-      axios.post('https://socialresearch.herokuapp.com/login',data)
+      axios.post(process.env.REACT_APP_API_URL+"/login",data)
       .then(
         (res)=>{
-          handleClose()
-          console.log(res.data);
+          if(res.data.success){
+            handleClose()
+            localStorage.setItem('sorech',JSON.stringify({name:res.data.user.name,email:res.data.user.email,password:res.data.user.password}))
+            dispatch({payload:true,...res.data.user})
+          }
         }
       )
       .catch()
@@ -42,7 +48,7 @@ export const Login = ({isLogin,setIsLogin}) => {
   return(
     <Modal
     open={isLogin}
-    onClose={handleClose}
+    // onClose={handleClose}
     aria-labelledby="modal-modal-title"
     aria-describedby="modal-modal-description"
     >
@@ -53,8 +59,8 @@ export const Login = ({isLogin,setIsLogin}) => {
             Login
             </Typography>
             <Box>
-                <TextField fullWidth sx={{mt:2}} id="standard-basic" label="E-mail" onChange={handleData} name='email' variant="standard" />
-                <TextField type='password' fullWidth sx={{mt:2,mb:2}} id="standard-basic" onChange={handleData} name='password' label="Password" variant="standard" />
+                <TextField fullWidth sx={{mt:2}} id="standard-basic" label="E-mail" value={data.email} onChange={handleData} name='email' variant="standard" />
+                <TextField type='password' fullWidth sx={{mt:2,mb:2}} id="standard-basic" value={data.password} onChange={handleData} name='password' label="Password" variant="standard" />
                 Don't have an account? 
                 <Typography component={'span'} color='blue' onClick={handleSignUp}> Sign Up</Typography>
                 

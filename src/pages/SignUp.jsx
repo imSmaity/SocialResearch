@@ -1,33 +1,45 @@
 import React from 'react'
 import {Box, Typography, TextField, Button} from '@mui/material'
 import axios from 'axios';
+import { useContext } from 'react';
+import { UserContext } from '../App';
+import { useEffect } from 'react';
 
 const SignUp = ({signup,style}) => {
   const {handleClose,setIsSignUp}=signup;
   const [data,setData]=React.useState({name:'',email:'',password:'',rpass:''})
+  const USER_STATE=useContext(UserContext)
+  const {dispatch}=USER_STATE
 
   const handleData=(e)=>{
     setData({...data,[e.target.name]:e.target.value})
   }
 
+  // useEffect(()=>{
+  //   const user=JSON.parse(localStorage.getItem('sorech'))
+  //   if(user!==null) handleClose();
+  // },[])
   const signUp=()=>{
 
-    if(data.password===data.rpass){
-      axios.post('https://socialresearch.herokuapp.com/signup',{
+    if(data.password===data.rpass && data.password.length>=6){
+      axios.post(process.env.REACT_APP_API_URL+'/signup',{
         name:data.name,
         email:data.email,
         password:data.password
       })
       .then(
         (res)=>{
-          handleClose()
-          console.log(res.data);
+          if(res.data.success){
+            handleClose()
+            localStorage.setItem('sorech',JSON.stringify({name:res.data.user.name,email:res.data.user.email}))
+            dispatch({payload:true,...res.data.user})
+          }
         }
       )
       .catch()
     }
     else{
-      alert("Enter correct password")
+      alert("Enter correct password and password less then 6")
     }
   }
 
