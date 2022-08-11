@@ -44,13 +44,7 @@ const PostView = ({open,handleClose,data,setData}) => {
         .then((res)=>{
             console.log(res.data);
         })
-        axios.get(process.env.REACT_APP_API_URL+"/allpost")
-        .then(res=>{
-        setData({
-            isLoading:false,
-            data:res.data
-        })
-        })
+
     }
     const downVote=()=>{
         const userId=state.email
@@ -62,13 +56,6 @@ const PostView = ({open,handleClose,data,setData}) => {
         .then((res)=>{
             console.log(res.data);
         })
-        axios.get(process.env.REACT_APP_API_URL+"/allpost")
-        .then(res=>{
-        setData({
-            isLoading:false,
-            data:res.data
-        })
-        })
 
     }
     const handleComment=(e)=>{
@@ -78,13 +65,6 @@ const PostView = ({open,handleClose,data,setData}) => {
         axios.post(process.env.REACT_APP_API_URL+'/reaction',{email:state.email,id:data.id,comment:comme,user_id:data.user_id,action:''})
         .then(()=>{
             setComme('')
-        })
-        axios.get(process.env.REACT_APP_API_URL+"/allpost")
-        .then(res=>{
-        setData({
-            isLoading:false,
-            data:res.data
-        })
         })
     }
   return (

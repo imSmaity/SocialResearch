@@ -12,7 +12,7 @@ const UserContext=createContext()
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState())
   useEffect(()=>{
-    if(state.email!==''){
+    if(state.email&&state.email!==''){
       const data=JSON.parse(localStorage.getItem('sorech'))
       axios.post(process.env.REACT_APP_API_URL+"/login",{email:data.email,password:data.password})
       .then(
